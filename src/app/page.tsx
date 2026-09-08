@@ -35,6 +35,10 @@ const INITIAL_FILTER_STATE: JobFilterState = {
   isHourly: false,
   employerType: "ALL",
   usState: "ALL",
+  category: "ALL",
+  compensationType: "ALL",
+  optCptOnly: false,
+  preferredStatesOnly: false,
 };
 
 export default function HomePage() {

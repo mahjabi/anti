@@ -10,7 +10,7 @@ export function cn(...inputs: ClassValue[]) {
 export function formatSalary(
   min: number,
   max: number,
-  period: "YEARLY" | "HOURLY" = "YEARLY",
+  period: "YEARLY" | "HOURLY" | "MONTHLY" | "STIPEND" = "YEARLY",
   currency = "USD"
 ): string {
   const formatter = new Intl.NumberFormat("en-US", {
@@ -21,6 +21,15 @@ export function formatSalary(
 
   if (period === "HOURLY") {
     return `${formatter.format(min)} - ${formatter.format(max)} / hr`;
+  }
+
+  if (period === "MONTHLY") {
+    return `${formatter.format(min)} - ${formatter.format(max)} / mo`;
+  }
+
+  if (period === "STIPEND") {
+    if (min === 0 && max === 0) return "Fellowship / Compute Grant";
+    return `${formatter.format(min)} - ${formatter.format(max)} Stipend`;
   }
 
   // Format in $150k - $190k / yr format
