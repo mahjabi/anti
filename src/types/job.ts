@@ -14,7 +14,9 @@ export type ContractType =
   | "CONTRACT_W2"
   | "C2C_CORP_TO_CORP"
   | "CONTRACT_1099"
-  | "CONTRACT_TO_HIRE";
+  | "CONTRACT_TO_HIRE"
+  | "INTERNSHIP_PAID"
+  | "INTERNSHIP_UNPAID";
 
 export type WorkLocationType = "REMOTE_US_ONLY" | "HYBRID" | "ONSITE";
 
@@ -42,6 +44,22 @@ export type ApplicationStage =
   | "OFFER_ACCEPTED"
   | "REJECTED";
 
+export type JobOpportunityCategory =
+  | "PHD_INTERNSHIP"
+  | "POST_PHD_FULLTIME"
+  | "STUDENT_RESEARCHER_FELLOWSHIP";
+
+export type CompensationType = "PAID" | "UNPAID_FREE" | "UNKNOWN";
+
+export type DataSourceOrigin =
+  | "GOOGLE_CAREERS"
+  | "USAJOBS"
+  | "CAREERONESTOP"
+  | "MICROSOFT_RESEARCH"
+  | "META_FAIR"
+  | "OPENAI_ANTHROPIC"
+  | "INDUSTRY_FEED";
+
 export interface Company {
   id: string;
   name: string;
@@ -54,6 +72,25 @@ export interface Company {
   headquarters: string;
 }
 
+export interface MatchScoreDetails {
+  overallScore: number;
+  skillsScore: number; // 35%
+  researchScore: number; // 25%
+  projectsScore: number; // 15%
+  educationScore: number; // 10%
+  careerInterestScore: number; // 10%
+  locationScore: number; // 3%
+  salaryScore: number; // 2%
+  supportingEvidence: string[];
+  missingQualifications: string[];
+  unknownFields: {
+    field: string;
+    reason: string;
+    suggestedAction: string;
+  }[];
+  rankingExplanation: string;
+}
+
 export interface Job {
   id: string;
   title: string;
@@ -63,19 +100,26 @@ export interface Job {
   responsibilities: string[];
   qualifications: string[];
   techStack: string[];
-  experienceLevel: "Entry-Level" | "Junior" | "Mid-Level" | "Senior" | "Staff" | "Principal / Lead" | "Director / VP";
+  experienceLevel: "Entry-Level" | "Junior" | "Mid-Level" | "Senior" | "Staff" | "Principal / Lead" | "Director / VP" | "PhD Intern / Researcher";
   contractType: ContractType;
   visaSponsorship: VisaSponsorshipType;
   securityClearance: SecurityClearanceType;
   workLocation: WorkLocationType;
   timezone: USTimezoneType;
   city: string;
-  state: string; // 2-letter US State code (CA, NY, TX, WA, etc.)
+  state: string; // 2-letter US State code (CA, TX, KS, MO, NY, WA, etc.)
   
-  // US State Salary Transparency Breakdown
+  // Opportunity Classification
+  category?: JobOpportunityCategory;
+  compensationType?: CompensationType;
+  dataSource?: DataSourceOrigin;
+  optCptEligible?: boolean | "UNKNOWN";
+  
+  // Salary details
   salaryMin: number;
   salaryMax: number;
-  salaryPeriod: "YEARLY" | "HOURLY";
+  salaryPeriod: "YEARLY" | "HOURLY" | "MONTHLY" | "STIPEND";
+  isSalaryDisclosed?: boolean;
   equity?: string;
   bonus?: string;
   
@@ -84,6 +128,65 @@ export interface Job {
   benefits: string[];
   postedAt: string;
   applicantCount: number;
+  deadline?: string;
+  matchScore?: MatchScoreDetails;
+}
+
+export interface CandidateProfile {
+  id: string;
+  fullName: string;
+  email: string;
+  phone?: string;
+  currentInstitution: string;
+  currentLab: string;
+  degreeLevel: string; // "Ph.D. in Computer Science"
+  phdStartYear: string; // "Aug 2026"
+  anticipatedGraduation: string; // "05/2030"
+  priorInstitutions: {
+    institution: string;
+    degree: string;
+    thesisTitle: string;
+    period: string;
+  }[];
+  researchInterests: string[];
+  skills: {
+    languages: string[];
+    frameworks: string[];
+    securityAndAi: string[];
+    tools: string[];
+  };
+  publications: {
+    year: number;
+    title: string;
+    venue: string;
+    citation: string;
+  }[];
+  manuscriptsInPrep: {
+    year: number;
+    title: string;
+  }[];
+  projects: {
+    title: string;
+    year: number;
+    description: string;
+    technologies: string[];
+  }[];
+  workExperience: {
+    role: string;
+    company: string;
+    period: string;
+    highlights: string[];
+  }[];
+  hardConstraints: {
+    mustBeOptCptEligible: boolean;
+    targetRoleType: "INTERNSHIP_ONLY" | "ALL";
+  };
+  softConstraints: {
+    preferredStates: string[]; // ["TX", "CA", "KS", "MO"]
+    openToAnywhereInUS: boolean;
+  };
+  isLocked: boolean; // Protects profile from accidental edits without manual unlock or CV upload
+  lastUpdated: string;
 }
 
 export interface Application {
@@ -125,4 +228,8 @@ export interface JobFilterState {
   isHourly: boolean;
   employerType: "ALL" | "DIRECT_ONLY" | "AGENCY_ONLY";
   usState: string;
+  category: "ALL" | JobOpportunityCategory;
+  compensationType: "ALL" | CompensationType;
+  optCptOnly: boolean;
+  preferredStatesOnly: boolean;
 }

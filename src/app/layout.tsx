@@ -4,8 +4,8 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
-  title: "TechJobs US — Premier US IT & Tech Recruitment Platform",
-  description: "Find high-paying US Software Engineering, Cloud, DevOps, and Data roles with full H-1B, OPT/CPT, W2, and C2C transparency.",
+  title: "Personalized Job Matching — PhD Career Matcher & Reranker",
+  description: "Evidence-grounded personalized PhD research internship and career matcher tailored for F-1 OPT/CPT eligibility, AI Safety, and LLM Security.",
 };
 
 export default function RootLayout({
