@@ -70,7 +70,7 @@ npm run dev
 ```
 
 ### 3. Open in browser:
-Open [http://localhost:3000](http://localhost:3000) or [http://localhost:3001](http://localhost:3001)
+Open [http://localhost:3000](http://localhost:3002) 
 
 ---
 
