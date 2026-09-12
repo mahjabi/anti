@@ -1,0 +1,15 @@
+# This project is implemented with Next.js, React, and TypeScript.
+# Python packages are not required.
+
+Node.js >= 20
+npm >= 10
+
+# Application dependencies are defined in:
+# package.json
+# package-lock.json
+
+# Installation:
+# npm install
+
+# Run:
+# npm run dev
